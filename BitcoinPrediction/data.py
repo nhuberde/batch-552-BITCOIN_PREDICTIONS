@@ -11,6 +11,7 @@ def get_data():
 
 def clean_data(data, test=False):
     data['Timestamp'] = pd.to_datetime(data['Timestamp'], unit='s', origin='unix')
+    data_test = data_sample[["Timestamp", "Open"]]
     data = data.fillna(method='ffill')
     return data
 
