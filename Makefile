@@ -1,4 +1,34 @@
 # ----------------------------------
+#          GCP
+# ----------------------------------
+# project id
+PROJECT_ID=bitcoin-prediction-305814  # Replace with your Project's ID
+
+# bucket name
+BUCKET_NAME=bitcoin-prediction-01 # Use your Project's name as it should be unique
+
+REGION=europe-west1 # Choose your region https://cloud.google.com/storage/docs/locations#available_locations
+
+set_project:
+	@gcloud config set project ${PROJECT_ID}
+
+create_bucket:
+	@gsutil mb -l ${REGION} -p ${PROJECT_ID} gs://${BUCKET_NAME}
+
+# path of the file to upload to gcp (the path of the file should be absolute or should match the directory where the make command is run)
+LOCAL_PATH="raw_data/bitstampUSD.csv"
+
+# bucket directory in which to store the uploaded file (we choose to name this data as a convention)
+BUCKET_FOLDER=data
+
+# name for the uploaded file inside the bucket folder (here we choose to keep the name of the uploaded file)
+# BUCKET_FILE_NAME=another_file_name_if_I_so_desire.csv
+BUCKET_FILE_NAME=$(shell basename ${LOCAL_PATH})
+
+upload_data:
+	@gsutil cp ${LOCAL_PATH} gs://${BUCKET_NAME}/${BUCKET_FOLDER}/${BUCKET_FILE_NAME}
+
+# ----------------------------------
 #          INSTALL & TEST
 # ----------------------------------
 install_requirements:
