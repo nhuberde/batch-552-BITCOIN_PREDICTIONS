@@ -13,5 +13,4 @@ setup(name='batch-552-BITCOIN_PREDICTIONS',
       test_suite='tests',
       # include_package_data: to install data from MANIFEST.in
       include_package_data=True,
-      scripts=['scripts/batch-552-BITCOIN_PREDICTIONS-run'],
       zip_safe=False)
