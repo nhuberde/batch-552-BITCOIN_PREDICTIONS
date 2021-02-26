@@ -15,6 +15,7 @@ def clean_data(data, test=False):
     data = data[2798176:4727776]
     data = data.drop(columns=['High', 'Low', 'Close', 'Volume_(BTC)', 'Volume_(Currency)', 'Weighted_Price'])
     data['Timestamp'] = pd.to_datetime(data['Timestamp'], unit='s', origin='unix')
+    data_test = data_sample[["Timestamp", "Open"]]
     data = data.fillna(method='ffill')
     return data
 
