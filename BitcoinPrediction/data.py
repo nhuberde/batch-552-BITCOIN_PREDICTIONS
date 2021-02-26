@@ -18,6 +18,15 @@ def clean_data(data, test=False):
     data = data.fillna(method='ffill')
     return data
 
+def open_diff_col(data):
+    data['Open_diff'] = data["Open"].diff()
+    diff_data = data[1:]
+    return diff_data
+
+def y_encoding(data):
+    data['Coded'] = data['Open_diff'].map(lambda x: 0 if x <= 0 else 1)
+    return data
+
 if __name__ == '__main__':
     data = get_data()
     print(data.shape)
