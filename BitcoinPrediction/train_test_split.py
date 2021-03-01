@@ -1,4 +1,5 @@
 from BitcoinPrediction.data import get_data
+from BitcoinPrediction.utils import select_date
 from BitcoinPrediction.preprocessing import preprocessing_data, features_target
 
 
