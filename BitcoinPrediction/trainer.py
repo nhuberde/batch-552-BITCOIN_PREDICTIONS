@@ -61,7 +61,7 @@ class Trainer(MLFlowBase):
             # TODO: train with trainer params + model + hyperparams
 
             # => appeler la crossval
-            score = cross_val(model_init:1000)
+            score = cross_val(data, **exp_params)
 
             # then log on mlflow
 
