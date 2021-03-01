@@ -2,6 +2,7 @@ from BitcoinPrediction.data import get_data
 from BitcoinPrediction.preprocessing import preprocessing_data, features_target
 from BitcoinPrediction.train_test_split import input_data
 from BitcoinPrediction.utils import select_date
+from BitcoinPrediction.models import cross_val, predict_score
 
 # import joblib
 # from termcolor import colored
@@ -15,7 +16,7 @@ from BitcoinPrediction.utils import select_date
 # EXPERIMENT_NAME = "bitcoin_hist_results"
 
 
-from coin.mlflowbase import MLFlowBase
+from BitcoinPrediction.mlflow_base import MLFlowBase
 
 from itertools import product
 
@@ -24,7 +25,7 @@ class Trainer(MLFlowBase):
 
     def __init__(self):
         super().__init__(
-            "[FR] [Paris] [bitcoin] taxifare + 1",
+            "[FR] [Paris] [nhuberde] bitcoin project",
             "https://mlflow.lewagon.co")
 
     def train(self, trainer_params, hyper_params):
@@ -61,6 +62,7 @@ class Trainer(MLFlowBase):
                     score = 123
 
                     # => appeler la crossval
+                    cross_val(model_init=)
 
                     # then log on mlflow
 
