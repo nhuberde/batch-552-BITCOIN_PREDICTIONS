@@ -7,6 +7,7 @@ from sklearn.model_selection import cross_val_score, cross_validate
 from sklearn.ensemble import RandomForestClassifier
 import statistics as stats
 import math
+from sklearn.svm import SVC
 # from sklearn.metrics import accuracy_score
 
 

@@ -1,7 +1,6 @@
 from BitcoinPrediction.data import get_data
 from BitcoinPrediction.utils import select_date
 
-
 # Function to produce a new dataframe provinding the difference 
 # between the current data compared to the shifted data (by our prediction horizon h)
 
