@@ -1,54 +1,57 @@
-import joblib
-from termcolor import colored
-import mlflow
-from BitcoinPrediction.data import ### xxx
-from BitcoinPrediction.transfomers import ### transformerNaN , transformerHours... 
-### si on décide de mettre toutes les transformations dans un fichier spécifique, sinon on laisse tout dans data ? ###
-from BitcoinPrediction.utils import ###xxx
-from memoized_property import memoized_property
-from mlflow.tracking import MlflowClient
-from sklearn.linear_model import LinearRegression
+from BitcoinPrediction.data import get_data
+from BitcoinPrediction.preprocessing import preprocessing_data, features_target
+from BitcoinPrediction.train_test_split import input_data
+from BitcoinPrediction.utils import select_date
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from google.cloud import storage
-from BitcoinPrediction.params_gcp import BUCKET_NAME, BUCKET_TRAIN_DATA_PATH, MODEL_NAME, MODEL_VERSION 
-### modifier nom params_gcp en fonction de ce que nico aura créé ###
+# import joblib
+# from termcolor import colored
+# import mlflow
+# from BitcoinPrediction.transfomers import ### transformerNaN , transformerHours... 
+### si on décide de mettre toutes les transformations dans un fichier spécifique, sinon on laisse tout dans data ? ###
+# from BitcoinPrediction.utils import xxx
+# from memoized_property import memoized_property
+# from mlflow.tracking import MlflowClient
+# from BitcoinPrediction.params_gcp import BUCKET_NAME, BUCKET_TRAIN_DATA_PATH, MODEL_NAME, MODEL_VERSION 
 
 
-MLFLOW_URI = "https://mlflow.lewagon.co/" # Valider qu'on ne doit pas utiliser un autre URI que celui du wagon
-EXPERIMENT_NAME = "bitcoin_hist_results"
+
+# MLFLOW_URI = "https://mlflow.lewagon.co/" # Valider qu'on ne doit pas utiliser un autre URI que celui du wagon
+# EXPERIMENT_NAME = "bitcoin_hist_results"
 
 
-class Trainer(object):
-    def __init__(self, X, y):
-        """
-            X: pandas DataFrame
-            y: pandas Series
-        """
-        self.pipeline = None
-        self.X = X
-        self.y = y
-        # for MLFlow
-        self.experiment_name = EXPERIMENT_NAME
+# class Trainer(object):
+#     def __init__(self, X, y):
+#         """
+#             X: pandas DataFrame
+#             y: pandas Series
+#         """
+#         self.pipeline = None
+#         self.X = X
+#         self.y = y
+#         # for MLFlow
+#         self.experiment_name = EXPERIMENT_NAME
 
-    def set_experiment_name(self, experiment_name):
-        '''defines the experiment name for MLFlow'''
-        self.experiment_name = experiment_name
+#     def set_experiment_name(self, experiment_name):
+#         '''defines the experiment name for MLFlow'''
+#         self.experiment_name = experiment_name
+    
+    #train_test_split
+    def input_data(X, y, data_size, sample_size, shift_size, train_size, test_size, h=1, w=0):
+        '''creates our train and test samples'''
+        self.input_data = input_data
 
     def set_pipeline(self):
-        """defines the pipeline as a class attribute"""
-        preproc_pipe = Pipeline([
-            ### ('fill na', transformerNaN()) ###
-        ])
-        
+        """defines the pipeline """       
         self.pipeline = Pipeline([
-            ('preproc', preproc_pipe),
-            ('linear_model', LinearRegression()) ### changer avec SVM ou autre model en fonction...
+            ('logisitic', LogisticRegression()) ### changer avec logisitic regr, SVC ou autre model ...
         ])
 
     def run(self):
         self.set_pipeline()
-        self.mlflow_log_param("model", "Linear") ### changer avec SVM ou autre model en fonction...
+        self.mlflow_log_param("model", "Logistic") ### changer avec SVC ou autre model en fonction...
         self.pipeline.fit(self.X, self.y)
 
     def evaluate(self, X_test, y_test):
@@ -111,8 +114,7 @@ class Trainer(object):
 
 if __name__ == "__main__":
     # Get and clean data
-    N = xxx ### number of rows we want to try in our first training
-    df = get_data(nrows=N)
+    df = get_data(nrows=sample_size)
     # ⚠️ alternatively use data from gcp with get_data_from_gcp
     df = clean_data(df)
     y = xxx ### to fill with Amélie's choice
