@@ -1,6 +1,7 @@
 from coin.trainer import Trainer
 
 trainer_params = dict(
+    model_init=[]
     sample_size=[1_000, 100_000, 200_000],
     shift_size=[5, 100],
     train_size=[2],
