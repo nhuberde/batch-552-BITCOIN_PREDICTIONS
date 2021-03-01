@@ -40,48 +40,47 @@ class Trainer(MLFlowBase):
             # print(exp_params)
 
             # step 2 : iterate on models
-            for model_name, model_hparams in hyper_params.items():
+            # for model_name, model_hparams in hyper_params.items():
 
                 # print(f"model name {model_name}")
 
                 # step 3 : iterate on model hyperparams
-                for hparam_combi in product(*model_hparams.values()):
+                # for hparam_combi in product(*model_hparams.values()):
 
-                    hexp_params = dict(zip(model_hparams.keys(), hparam_combi))
+                #     hexp_params = dict(zip(model_hparams.keys(), hparam_combi))
 
                     # print(hexp_params)
 
                     # mais avec quoi je train ?
-                    i += 1
-                    print(f"\nexperiment #{i}:")
-                    print(exp_params)
-                    print(f"model name {model_name}")
-                    print(hexp_params)
+            i += 1
+            print(f"\nexperiment #{i}:")
+            print(exp_params)
+            print(f"model name {model_name}")
+            print(hexp_params)
 
-                    # TODO: train with trainer params + model + hyperparams
-                    score = 123
+            # TODO: train with trainer params + model + hyperparams
 
-                    # => appeler la crossval
-                    cross_val(model_init=)
+            # => appeler la crossval
+            score = cross_val(model_init:1000)
 
-                    # then log on mlflow
+            # then log on mlflow
 
-                    # create a mlflow training
-                    self.mlflow_create_run()  # create one training
+            # create a mlflow training
+            self.mlflow_create_run()  # create one training
 
-                    # log trainer params
-                    for key, value in exp_params.items():
-                        self.mlflow_log_param(key, value)
+            # log trainer params
+            for key, value in exp_params.items():
+                self.mlflow_log_param(key, value)
 
-                    # log params
-                    self.mlflow_log_param("model", model_name)
+            # log params
+            self.mlflow_log_param("model", model_name)
 
-                    # log model hyper params
-                    for key, value in hexp_params.items():
-                        self.mlflow_log_param(key, value)
+            # log model hyper params
+            for key, value in hexp_params.items():
+                self.mlflow_log_param(key, value)
 
-                    # push metrics to mlflow
-                    self.mlflow_log_metric("score", score)
+            # push metrics to mlflow
+            self.mlflow_log_metric("score", score)
 
 
 if __name__ == "__main__":
