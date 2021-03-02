@@ -1,24 +1,17 @@
 from BitcoinPrediction.data import get_data
 from BitcoinPrediction.models import cross_val
 from BitcoinPrediction.mlflow_base import MLFlowBase
-
+from BitcoinPrediction.params import buddy_name
 from itertools import product
+import numpy as np
 # from BitcoinPrediction.preprocessing import preprocessing_data, features_target
 # from BitcoinPrediction.train_test_split import input_data
 # from BitcoinPrediction.utils import select_date
 
 # import joblib
 # from termcolor import colored
-# import mlflow
 # from memoized_property import memoized_property
-# from mlflow.tracking import MlflowClient
 # from BitcoinPrediction.params_gcp import BUCKET_NAME, BUCKET_TRAIN_DATA_PATH, MODEL_NAME, MODEL_VERSION 
-
-
-# MLFLOW_URI = "https://mlflow.lewagon.co/" # Valider qu'on ne doit pas utiliser un autre URI que celui du wagon
-# EXPERIMENT_NAME = "bitcoin_hist_results"
-
-
 
 
 class Trainer(MLFlowBase):
@@ -63,9 +56,8 @@ class Trainer(MLFlowBase):
 
             # => appeler la crossval
             data = get_data()
-            score = cross_val(data, **exp_params)
+            results, parameters = cross_val(data, **exp_params)
 
-            # then log on mlflow
 
             # create a mlflow training
             self.mlflow_create_run()  # create one training
@@ -73,6 +65,9 @@ class Trainer(MLFlowBase):
             # log trainer params
             for key, value in exp_params.items():
                 self.mlflow_log_param(key, value)
+                
+            # then log buddy_name on mlflow
+            self.mlflow_log_param("buddy_name", {buddy_name})
 
             # log params
             # self.mlflow_log_param("model", model_name)
@@ -82,10 +77,13 @@ class Trainer(MLFlowBase):
             #     self.mlflow_log_param(key, value)
 
             # push metrics to mlflow
-            self.mlflow_log_metric("mean_score", score['mean_score'])
-            self.mlflow_log_metric("std", score['std'])
-            self.mlflow_log_metric("score_min", score['score_min'])
-            self.mlflow_log_metric("score_max", score['score_max'])
+            self.mlflow_log_metric("mean_score", results['mean_score'])
+            self.mlflow_log_metric("std", results['std'])
+            self.mlflow_log_metric("score_min", results['score_min'])
+            self.mlflow_log_metric("score_max", results['score_max'])
+            for p in range(parameters.shape[1]):
+                self.mlflow_log_metric(f"coef_feature {p}", parameters[0,p])
+            
 
 
 # if __name__ == "__main__":
