@@ -16,7 +16,7 @@ def predict_score(model_init, X_train, X_test, y_train, y_test):
     model = model.fit(X_train, y_train)
     results = model.predict(X_test)
     score = model.score(X_test, y_test) 
-    return score
+    return score, model.get_params()
 
 # Cross-val function to predict the average score of our Baseline model :
 def cross_val(data, model_init=None,sample_size=1000, train_fraction=0.7, features_size=60, h=1, date_start=None, date_end=None):
@@ -32,13 +32,20 @@ def cross_val(data, model_init=None,sample_size=1000, train_fraction=0.7, featur
     intervals = range(0, r)
     reversed_intervals = reversed(intervals)
     results = []
-    
+    parameters = []
+
     for i in reversed_intervals:
         X_train, X_test, y_train, y_test = input_data(X, y, sample_size, data_size, train_size, test_size, h, w=i)
-        score = predict_score(model_init, X_train, X_test, y_train, y_test)
+        score, params = predict_score(model_init, X_train, X_test, y_train, y_test)
         results.append(score)
-        
-    return dict({'mean_score':round(stats.mean(results),2), 'std':round(stats.stdev(results),2) , 'score_min':round(min(results),2), 'score_max':round(max(results),2)})
+        parameters.append(params)
+    
+    return results, parameters
+    # return dict({'mean_score':round(stats.mean(results),2),
+    #              'std':round(stats.stdev(results),2),
+    #              'score_min':round(min(results),2),
+    #              'score_max':round(max(results),2),
+    #              'n_fold':r})
 
 # if __name__ == '__main__':
 #     results = run_model(data)
