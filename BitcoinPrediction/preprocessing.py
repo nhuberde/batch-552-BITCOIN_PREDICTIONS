@@ -4,14 +4,14 @@ from BitcoinPrediction.utils import select_date
 # Function to produce a new dataframe provinding the difference 
 # between the current data compared to the shifted data (by our prediction horizon h)
 
-def preprocessing_data(data, shift_size, h):
-    
+def preprocessing_data(data, features_size, h):
+        
     data_pp = data.copy()
     data_pp['diff_Open'] = data_pp['Open'].diff(h)
     data_pp['diff_Open'] = data_pp['diff_Open'].dropna()
     data_pp[f"t+{h}"] = data_pp['diff_Open'].shift(-h)
     
-    for i in range(0, shift_size):
+    for i in range(0, features_size):
         data_pp[f't-{i}'] = data_pp['Open'].shift(i)
     data_shifted = data_pp.dropna()
     

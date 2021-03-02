@@ -1,8 +1,11 @@
 from BitcoinPrediction.data import get_data
-from BitcoinPrediction.preprocessing import preprocessing_data, features_target
-from BitcoinPrediction.train_test_split import input_data
-from BitcoinPrediction.utils import select_date
-from BitcoinPrediction.models import cross_val, predict_score
+from BitcoinPrediction.models import cross_val
+from BitcoinPrediction.mlflow_base import MLFlowBase
+
+from itertools import product
+# from BitcoinPrediction.preprocessing import preprocessing_data, features_target
+# from BitcoinPrediction.train_test_split import input_data
+# from BitcoinPrediction.utils import select_date
 
 # import joblib
 # from termcolor import colored
@@ -16,9 +19,6 @@ from BitcoinPrediction.models import cross_val, predict_score
 # EXPERIMENT_NAME = "bitcoin_hist_results"
 
 
-from BitcoinPrediction.mlflow_base import MLFlowBase
-
-from itertools import product
 
 
 class Trainer(MLFlowBase):
@@ -27,8 +27,9 @@ class Trainer(MLFlowBase):
         super().__init__(
             "[FR] [Paris] [nhuberde] bitcoin project",
             "https://mlflow.lewagon.co")
-
-    def train(self, trainer_params, hyper_params):
+            
+    # def train(self, trainer_params, hyper_params):
+    def train(self, trainer_params):
 
         i = 0
 
@@ -55,12 +56,13 @@ class Trainer(MLFlowBase):
             i += 1
             print(f"\nexperiment #{i}:")
             print(exp_params)
-            print(f"model name {model_name}")
-            print(hexp_params)
+            # print(f"model name {model_name}")
+            # print(hexp_params)
 
             # TODO: train with trainer params + model + hyperparams
 
             # => appeler la crossval
+            data = get_data()
             score = cross_val(data, **exp_params)
 
             # then log on mlflow
@@ -73,15 +75,18 @@ class Trainer(MLFlowBase):
                 self.mlflow_log_param(key, value)
 
             # log params
-            self.mlflow_log_param("model", model_name)
+            # self.mlflow_log_param("model", model_name)
 
             # log model hyper params
-            for key, value in hexp_params.items():
-                self.mlflow_log_param(key, value)
+            # for key, value in hexp_params.items():
+            #     self.mlflow_log_param(key, value)
 
             # push metrics to mlflow
-            self.mlflow_log_metric("score", score)
+            self.mlflow_log_metric("mean_score", score['mean_score'])
+            self.mlflow_log_metric("std", score['std'])
+            self.mlflow_log_metric("score_min", score['score_min'])
+            self.mlflow_log_metric("score_max", score['score_max'])
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 

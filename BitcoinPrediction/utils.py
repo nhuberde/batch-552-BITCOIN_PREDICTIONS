@@ -1,17 +1,16 @@
 from BitcoinPrediction.data import get_data
 import pandas as pd
 
-# Function to select a specific starting or ending date in the dataframe instead of indexes
+# Function to select a specific starting or ending date in the dataframe instead of indexes 
 
-def select_date(data, starting_date, ending_date):
-    
+def select_date(data, date_start, date_end):
     data['Timestamp'] = pd.to_datetime(data['Timestamp'], unit='s', origin='unix')
     data = data[['Open', 'Timestamp']].set_index("Timestamp").fillna(method='ffill')
-    
-    if starting_date != None:
-        if ending_date != None:
-            data = data[starting_date:ending_date].copy()
+
+    if date_start != None:
+        if date_end != None:
+            data = data[date_start:date_end].copy()
     else:
         data = data.copy()
         
-    return data 
+    return data
